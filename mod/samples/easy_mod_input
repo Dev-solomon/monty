@@ -1,7 +1,0 @@
-push 25
-push 17
-mod
-pall
-push 2
-mod
-pall
