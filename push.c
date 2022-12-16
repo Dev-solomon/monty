@@ -1,49 +1,38 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include "monty.h"
-/**
- * _push - Push onto the stack
- * @stack: the stack
- * @line: line number
- */
-void _push(stack_t **stack, unsigned int line)
-{
-	stack_t *tmp;
 
-	/* if mode 0, stack */
-	if (stack == NULL)
-		printf("DEBUG: We made a mistake creating our stack\n");
-	if (*stack == NULL)
+/**
+ * push - push element into the stack
+ * @stack: stack given by main
+ * @line_cnt: amount of lines
+ *
+ * Return: void
+ */
+void push(stack_t **stack, unsigned int line_cnt)
+{
+	char *n = global.argument;
+
+	if ((is_digit(n)) == 0)
 	{
-		global.stack = create_node();
-		if (global.mode == 2)
-			printf("L%u: usage: push integer\n", line);
+		fprintf(stderr, "L%d: usage: push integer\n", line_cnt);
+		exit(EXIT_FAILURE);
+	}
+
+	if (global.data_struct == 1)
+	{
+		if (!add_node(stack, atoi(global.argument)))
+		{
+			exit(EXIT_FAILURE);
+		}
 	}
 	else
 	{
-		tmp = *stack;
-		global.stack = create_node();
-		if (global.mode == 2)
+		if (!queue_node(stack, atoi(global.argument)))
 		{
-			printf("L%u: usage: push integer\n", line);
-			return;
+			exit(EXIT_FAILURE);
 		}
-		global.stack->next = tmp;
 	}
-	/* if mode 1, queue */
-}
-/**
- * create_node - creates a new node, returns pointer to node
- * Return: pointer to node
- */
-stack_t *create_node(void)
-{
-	stack_t *node;
-
-	node = malloc(sizeof(stack_t));
-	if (node == NULL)
-		exit_with_error("Error: malloc failed");
-
-	node->n = parse_number();
-	node->prev = NULL;
-	node->next = NULL;
-	return (node);
 }
